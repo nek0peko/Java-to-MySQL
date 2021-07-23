@@ -3,36 +3,36 @@ import java.sql.*;
 public class rmv {
     static int num;
     static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-    static final String URL = "jdbc:mysql://192.168.31.250:3306/DB1?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8&useSSL=false";
-    static final String userName = "alice";
+    static final String URL = "jdbc:mysql://121.36.198.150:3306/GroupFour?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8&useSSL=false";
+    static final String userName = "root";
     static final String passWord = "123456";
     
-    public static void check(String[] args) {
+    public static boolean check(String[] args) {
         if(args.length != 3) {
-            System.out.println("参数输入个数错误！");
-            System.out.println("请使用 'rmv 出库数量 配件ID 仓库ID' 的格式。");
-            System.exit(0);
+            System.out.printf("参数输入个数错误！\n请使用 'rmv 出库数量 配件ID 仓库ID' 的格式。\n");
+            return true;
         }
 
         try {
             num = Integer.parseInt(args[0]);
         } catch (NumberFormatException e) {
-            System.out.println("出库数量类型错误！");
-            System.exit(0);
+            System.out.printf("出库数量类型错误！\n");
+            return true;
         }
 
         if(num <= 0) {
-            System.out.println("出库数量应大于0！");
-            System.exit(0);
+            System.out.printf("出库数量应大于0！\n");
+            return true;
         }
+
+        return false;
     }
 
-    public static void main(String[] args) {
-        rmv.check(args);
-        boolean pid_exist = false;
-        boolean wid_exist = false;
+    public static void dosql(String[] args) {
         String PID = args[1];
         String WID = args[2];
+        boolean pid_exist = false;
+        boolean wid_exist = false;
         Connection conn = null;
         Statement stmt = null;
         PreparedStatement pstmt = null;
@@ -52,7 +52,7 @@ public class rmv {
             }
             rs.close();
             if(!(pid_exist && wid_exist)) {
-                System.out.println("配件号或仓库号不存在！");
+                System.out.printf("配件号或仓库号不存在！\n");
             } else {
                 String sql2 = "update partsrepertory set stock = stock - ? where pid = ? and wid = ? and (stock - ?) >= 0";
                 pstmt = conn.prepareStatement(sql2);
@@ -62,10 +62,10 @@ public class rmv {
                 pstmt.setInt(4, num);
                 int n = pstmt.executeUpdate();
                 if(n == 1) {
-                    System.out.println("出库成功！");
+                    System.out.printf("出库成功！\n");
                 }
                 else {
-                    System.out.println("库存不足！");
+                    System.out.printf("库存不足！\n");
                 }
                 pstmt.close();
             }
@@ -101,5 +101,12 @@ public class rmv {
                 se.printStackTrace();
             }
         }
+    }
+
+    public static void main(String[] args) {
+        if(rmv.check(args)) {
+            System.exit(0);
+        }
+        rmv.dosql(args);
     }
 }
