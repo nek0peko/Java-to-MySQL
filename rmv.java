@@ -25,6 +25,11 @@ public class rmv {
             return true;
         }
 
+        if((args[1].length() > 10) || (args[2].length() > 10)) {
+            System.out.printf("参数长度非法！\n");
+            return true;
+        }
+
         return false;
     }
 
