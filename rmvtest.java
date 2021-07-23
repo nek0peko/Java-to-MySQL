@@ -85,4 +85,24 @@ public class rmvtest {
 		a.dosql(args);
 		assertEquals(expected_result, system_out.toString());
 	}
+
+	@Test
+	public void test_8() {
+		final ByteArrayOutputStream system_out = new ByteArrayOutputStream();
+		System.setOut(new PrintStream(system_out));
+		String expected_result = "参数长度非法！\n";
+		String[] args = {"2", "005", "002002002002"};
+		a.check(args);
+		assertEquals(expected_result, system_out.toString());
+	}
+
+	@Test
+	public void test_9() {
+		final ByteArrayOutputStream system_out = new ByteArrayOutputStream();
+		System.setOut(new PrintStream(system_out));
+		String expected_result = "参数长度非法！\n";
+		String[] args = {"2", "005005005005", "002"};
+		a.check(args);
+		assertEquals(expected_result, system_out.toString());
+	}
 }
