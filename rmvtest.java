@@ -11,7 +11,7 @@ public class rmvtest {
 	
 	@Before
 	public void setUp() throws Exception {
-		a=new rmv();
+		a = new rmv();
 	}
 	
 	@Test
